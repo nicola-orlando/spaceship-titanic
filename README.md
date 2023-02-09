@@ -47,7 +47,6 @@ Earth | 0.43
 Europa |   0.66
 Mars | 0.52
   
-  
 Destination | Transported label average
 --- | --- 
 55 Cancri e | 0.62 
@@ -74,9 +73,30 @@ Starting with Cabin. This has -0.1 correlation with the target label. The variab
 - Deck: this seems to have a very important role, passengers from decks B and C are very likely to be transported (probability of about 70%)
 - Side: passengers in side S are much more likely (20% more) to be transported
 
-Now let's calculate the correlation between the target label and the new 3 columns: 
+Now let's calculate the correlation between the target label and the new 3 columns, the results are: 
 
+- Deck: -0.11
+- Side: 0.10
+- Number: -0.05
 
+The results are pretty interesting, Deck and Side are anti-correlated so merging these two features as part of Cabin can potentially result in loss of information and ability to distinguish between the two Tranported outcomes.  
+
+Finally let's look at PassengerId, its definition is "A unique Id for each passenger. Each Id takes the form gggg_pp where gggg indicates a group the passenger is travelling with and pp is their number within the group. People in a group are often family members, but not always.". As for the Cabin variable let's split this into two components: "gggg" (Group) and "pp" (Group_size). A reminder, the PassengerId variable has correlation below 0.005 with the target. What do we have 
+- Group: has no correlation with the target and very large correlation with the cabin number !
+- Group_size has large correlation with target (10%)
+
+How does the average label value changes per group size? 
+
+Group Size | Transported label average
+--- | --- 
+1 |             0.48
+2 |             0.56
+3 |             0.60
+4 |             0.64
+5 |             0.57
+6 |             0.55
+7 |             0.59
+8 |             0.50
 
 ### Nans analysis 
 
