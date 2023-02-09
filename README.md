@@ -6,6 +6,10 @@ Here also some notes on the analysis.
 ## EDA of the dataset 
 A detailed description of the dataset is available here https://www.kaggle.com/competitions/spaceship-titanic/data. 
 
+One can check the overall features of the dataset: 
+- The training data has a balanced set of labels 
+- There are some columns with outliers (for example RoomService has mean 223, std dev. of 645 and max value of 9920). Outliers will be handled separately
+
 The target variable is Transported. To have a quick idea of how the features are related to transported here a correlation plot. 
 This plot is made right after converting to numerical all categorical data and dropping the NaNs. 
 
@@ -16,6 +20,63 @@ From this plot, one might infer the following:
 - PassengerId, ShoppingMall, VIP are the less correlated, thus might be less important for the model design (is this really true?)
 
 ### Analysis of individual features 
+
+This study is done after removing any row with at least one NaN in the dataset. 
+The first thing I want to do is to check how many unique values each categorical data feature has. Here's the result 
+
+['HomePlanet','Cabin','Destination', 'PassengerId', 'VIP', 'CryoSleep']
+
+HomePlanet | Cabin | Destination | PassengerId | VIP | CryoSleep 
+--- | --- | --- |--- |--- |--- 
+3 | 5305 | 3 | 6606 | 2 | 2 
+
+As expected Cabin and PassengerId are those categorical data with highest number of unique values. Is this useful/good for the performance of the model? 
+
+Looking at categorical data with low multiplicity of distinct counts, one can see the following probability of being 'transported' (Transported label = True), assuming fully balanced dataset (practically the case) 
+
+- HomePlanet: people from Europa are significantly more likely to be transported, people from Earth are less likely transported
+- Destination: people directed to '55 Cancri e' are significantly more likely to be transported 
+- VIP: look like VIPs are less likely to be transported 
+- CryoSleep: people in CryoSleep are strongly likely to be transported 
+
+Summary tables here below. The second column is the average value of the target label (Transported)
+
+HomePlanet | Transported label average
+--- | --- 
+Earth | 0.43 
+Europa |   0.66
+Mars | 0.52
+  
+  
+Destination | Transported label average
+--- | --- 
+55 Cancri e | 0.62 
+PSO J318.5-22 | 0.51 
+TRAPPIST-1e | 0.47 
+
+VIP | Transported label average
+--- | --- 
+False | 0.51 
+True |  0.37
+
+CryoSleep | Transported label average
+--- | --- 
+False | 0.33 
+True | 0.82 
+
+
+In summary using these four features (HomePlanet, Destination, VIP, CryoSleep) is likely to be beneficial. 
+
+Now analysing the categorical data with high multiplicity of unique values (Cabin and PassengerId). To do so we will go back to the dataset before converting the categorical data to numerical. 
+
+Starting with Cabin. This has -0.1 correlation with the target label. The variables is defined in this way: "The cabin number where the passenger is staying. Takes the form deck/num/side, where side can be either P for Port or S for Starboard". It is beneficial to see. the imact of decomposing the Cabin variable into each component, deck/num/side. Here the results 
+
+- Deck: this seems to have a very important role, passengers from decks B and C are very likely to be transported (probability of about 70%)
+- Side: passengers in side S are much more likely (20% more) to be transported
+
+Now let's calculate the correlation between the target label and the new 3 columns: 
+
+
 
 ### Nans analysis 
 
