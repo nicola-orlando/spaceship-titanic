@@ -102,13 +102,29 @@ One last feature that is possible to extract from the data is the gender of the 
 In the original Titanic (https://www.kaggle.com/competitions/titanic) challenge the gender of the passengers is the single most influential feature.  
 Here we can extract it based on the passenger first name. 
 
+Using gender_guesser (https://pypi.org/project/gender-guesser/) you will get the following partition of the train dataset 
+
+Gender | Number of labeled rows 
+--- | --- 
+andy          | 71
+female        | 811
+male          | 423
+mostly_female | 23
+mostly_male   | 81
+unknown       | 7084
+
 The average label value changes per gender group is found to be  
 
 Gender | Transported label average
 --- | --- 
-XX |             XX
-XX |             XX
+andy | 0.46
+female | 0.47
+male | 0.44
+mostly_female | 0.52
+mostly_male | 0.48
+unknown | 0.51
 
+Because of the large fraction of data classified as unknown, the gender information will hardly be useful. 
 
 ### Nans analysis 
 
@@ -126,18 +142,33 @@ Looking only at numerical data: look like Nans in RoomService, FoodCourt, Shoppi
 
 ### Final model 
 
-The model I decided to use is XGBoost implemented with a 5-fold cross validation strategy. I tried several configurations to test variations of input features, NaN treatment, XGBoost model optimisation, etc. I calculated the classification accuracy with a small testing sample obtained by reserving 20% of the initial training dataset. The results are as shown below: 
+The model I decided to use is XGBoost implemented with a 5-fold cross validation strategy. I tried several configurations to test variations of input features, NaN treatment, XGBoost model optimisation, etc. I calculated the classification accuracy with a small testing sample obtained by reserving 20% of the initial training dataset. For convenience I define a nominal model as follows: 
+1 Training features = ['HomePlanet', 'CryoSleep', 'Cabin', 'Destination', 'Age', 'VIP', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck', 'Transported', 'Deck', 'Side', 'Group', 'Group_size', 'Gender', 'Vowels', 'Consonant']
+2 Nans in numerical variables ['RoomService','FoodCourt','ShoppingMall','Spa','VRDeck'] are replaced with zeros. 
+3 Rows with nans in the training features are removed
+4 Outliers are kept 
+5 Only a simple optimisation is performed on the max_depth ('max_depth': [5,6,7])
 
-Configuration | Classification accuracy 
+
+The results are as shown below.  
+
+Configuration | Classification accuracy [%] 
 --- | --- 
-Nominal |             XX
-Nominal + Outliers dropped |             XX
-Nominal + Outliers dropped |             XX
-Nominal + reduced features set 1 |             XX
-Nominal + reduced features set 2 |             XX
-Nominal + reduced features set 3 |             XX
-Nominal + filling nans with averages |             XX
-Nominal + reduced features set 4 + dedicated nans removal |             XX 
+Nominal |             81.08
+Nominal, replace nans with averages (features other than in point 2) |             81.08
+Nominal + Outliers dropped |             80.50
+Nominal + reduced features set 1 |             80.18
+Nominal + reduced features set 2 |             80.18
+Nominal + reduced features set 2 + HP scan |   79.92           
+Nominal + reduced features set 3 |             80.68
+Nominal + reduced features set 3 + HP scan |   80.80
+
+
+['HomePlanet', 'CryoSleep', 'Destination', 'Age', 'VIP', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck', 'Transported', 'Deck', 'Side', 'Group_size', 'Gender', 'Vowels', 'Consonant']
+
+['HomePlanet', 'CryoSleep', 'Destination', 'Age', 'VIP', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck', 'Transported', 'Deck', 'Side', 'Group_size']
+
+['HomePlanet', 'CryoSleep', 'Destination', 'RoomService', 'FoodCourt', 'ShoppingMall', 'Spa', 'VRDeck', 'Transported', 'Deck', 'Side', 'Group_size']
 
 
 
