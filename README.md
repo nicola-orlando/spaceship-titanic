@@ -98,6 +98,18 @@ Group Size | Transported label average
 7 |             0.59
 8 |             0.50
 
+One last feature that is possible to extract from the data is the gender of the passenger. 
+In the original Titanic (https://www.kaggle.com/competitions/titanic) challenge the gender of the passengers is the single most influential feature.  
+Here we can extract it based on the passenger first name. 
+
+The average label value changes per gender group is found to be  
+
+Gender | Transported label average
+--- | --- 
+XX |             XX
+XX |             XX
+
+
 ### Nans analysis 
 
 Nans counting per column: 
@@ -111,3 +123,21 @@ Looking only at numerical data: look like Nans in RoomService, FoodCourt, Shoppi
 - Average value of the transported label is 0.504582 and 0.458564 for RoomService not having and having a Nan
 - Average value of the transported label is 0.502820 and 0.540984 for FoodCourt not having and having a Nan
 - Average value of the transported label is 0.502534 and 0.548077 for ShoppingMall not having and having a Nan
+
+### Final model 
+
+The model I decided to use is XGBoost implemented with a 5-fold cross validation strategy. I tried several configurations to test variations of input features, NaN treatment, XGBoost model optimisation, etc. I calculated the classification accuracy with a small testing sample obtained by reserving 20% of the initial training dataset. The results are as shown below: 
+
+Configuration | Classification accuracy 
+--- | --- 
+Nominal |             XX
+Nominal + Outliers dropped |             XX
+Nominal + Outliers dropped |             XX
+Nominal + reduced features set 1 |             XX
+Nominal + reduced features set 2 |             XX
+Nominal + reduced features set 3 |             XX
+Nominal + filling nans with averages |             XX
+Nominal + reduced features set 4 + dedicated nans removal |             XX 
+
+
+
