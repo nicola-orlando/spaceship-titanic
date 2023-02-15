@@ -1,5 +1,6 @@
 # spaceship-titanic
 Repository for the spaceship Titanic challenge: https://www.kaggle.com/competitions/spaceship-titanic/overview.    
+***The final score on the Kaggle submission file is 0.80289, top 20% of the leaderboard.*** Not great but not bad either !
 
 Here also some notes on the analysis and results.  
 
